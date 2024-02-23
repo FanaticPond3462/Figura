@@ -24,7 +24,7 @@ jobs:
           check-latest: true
 
       - name: Build using Gradle
-        run: ./gradlew build
+        run: ./gradlew build -Xlint:unchecked
 
       - name: Upload Fabric artifacts to GitHub
         uses: actions/upload-artifact@v3
