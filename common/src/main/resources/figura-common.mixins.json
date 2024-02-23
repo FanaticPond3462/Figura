@@ -92,7 +92,8 @@
     "sound.SoundManagerAccessor",
     "sound.SubtitleOverlayMixin",
     "compat.GeckolibGeoRendererMixin",
-    "compat.GeckolibGeoArmorRendererMixin"
+    "compat.GeckolibGeoArmorRendererMixin",
+    "SNIHelperMixin"
   ],
   "server": [
   ],
