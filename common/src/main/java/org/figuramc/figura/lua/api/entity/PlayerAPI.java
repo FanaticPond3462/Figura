@@ -106,14 +106,14 @@ public class PlayerAPI extends LivingEntityAPI<Player> {
     @LuaMethodDoc("player.has_cape")
     public boolean hasCape() {
         checkEntity();
-        return checkPlayerInfo() && playerInfo.isCapeLoaded();
+        return checkPlayerInfo() && playerInfo.getSkin().capeTexture() != null;
     }
 
     @LuaWhitelist
     @LuaMethodDoc("player.has_skin")
     public boolean hasSkin() {
         checkEntity();
-        return checkPlayerInfo() && playerInfo.isSkinLoaded();
+        return checkPlayerInfo() && playerInfo.getSkin().texture() != null;
     }
 
     @LuaWhitelist

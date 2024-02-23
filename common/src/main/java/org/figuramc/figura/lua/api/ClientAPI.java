@@ -18,10 +18,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.scores.Objective;
-import net.minecraft.world.scores.PlayerTeam;
-import net.minecraft.world.scores.Score;
-import net.minecraft.world.scores.Scoreboard;
+import net.minecraft.world.scores.*;
 import org.figuramc.figura.FiguraMod;
 import org.figuramc.figura.lua.LuaNotNil;
 import org.figuramc.figura.lua.LuaWhitelist;
@@ -132,13 +129,13 @@ public class ClientAPI {
         if (Minecraft.getInstance().player == null)
             return null;
 
-        return Minecraft.getInstance().getSingleplayerServer() == null ? Minecraft.getInstance().player.getServerBrand() : "Integrated";
+        return Minecraft.getInstance().getSingleplayerServer() == null ? Minecraft.getInstance().player.connection.serverBrand() : "Integrated";
     }
 
     @LuaWhitelist
     @LuaMethodDoc("client.get_chunk_statistics")
     public static String getChunkStatistics() {
-        return Minecraft.getInstance().levelRenderer.getChunkStatistics();
+        return Minecraft.getInstance().levelRenderer.getSectionStatistics();
     }
 
     @LuaWhitelist
@@ -216,7 +213,7 @@ public class ClientAPI {
     @LuaWhitelist
     @LuaMethodDoc("client.is_debug_overlay_enabled")
     public static boolean isDebugOverlayEnabled() {
-        return Minecraft.getInstance().options.renderDebug;
+        return Minecraft.getInstance().getDebugOverlay().showDebugScreen();
     }
 
     @LuaWhitelist
@@ -584,13 +581,13 @@ public class ClientAPI {
         if (playerTeam != null) {
             int id = playerTeam.getColor().getId();
             if (id >= 0) {
-                objectives.put("sidebar_team_" + playerTeam.getColor().getName(), scoreboard.getDisplayObjective(3 + id));
+                objectives.put("sidebar_team_" + playerTeam.getColor().getName(), scoreboard.getDisplayObjective(DisplaySlot.BY_ID.apply(3 + id)));
             }
         }
 
-        objectives.put("list", scoreboard.getDisplayObjective(0));
-        objectives.put("sidebar", scoreboard.getDisplayObjective(1));
-        objectives.put("below_name", scoreboard.getDisplayObjective(2));
+        objectives.put("list", scoreboard.getDisplayObjective(DisplaySlot.LIST));
+        objectives.put("sidebar", scoreboard.getDisplayObjective(DisplaySlot.SIDEBAR));
+        objectives.put("below_name", scoreboard.getDisplayObjective(DisplaySlot.BELOW_NAME));
 
         for (Map.Entry<String, Objective> entry : objectives.entrySet()) {
             String key = entry.getKey();
@@ -605,8 +602,8 @@ public class ClientAPI {
                 objectiveMap.put("render_type", objective.getRenderType().getSerializedName());
 
                 Map<String, Integer> scoreMap = new HashMap<>();
-                for (Score score : scoreboard.getPlayerScores(objective)) {
-                    scoreMap.put(score.getOwner(), score.getScore());
+                for (PlayerScoreEntry score : scoreboard.listPlayerScores(objective)) {
+                    scoreMap.put(score.owner(), score.value());
                 }
 
                 objectiveMap.put("scores", scoreMap);

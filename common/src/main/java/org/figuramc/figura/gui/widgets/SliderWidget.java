@@ -33,9 +33,9 @@ public class SliderWidget extends ScrollBarWidget {
     // -- methods -- // 
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount, double d) {
         if (!this.isActive()) return false;
-        scroll(stepSize * Math.signum(-amount) * (getWidth() - headWidth + 2d));
+        scroll(stepSize * Math.signum(-amount-d) * (getWidth() - headWidth + 2d));
         return true;
     }
 
@@ -74,18 +74,11 @@ public class SliderWidget extends ScrollBarWidget {
     }
 
     @Override
-    public void render(GuiGraphics gui, int mouseX, int mouseY, float delta) {
-        if (this.isVisible()) {
-            // set hovered
-            this.isHovered = this.isMouseOver(mouseX, mouseY);
-
-            // render button
-            this.renderWidget(gui, mouseX, mouseY, delta);
-        }
-    }
-
-    @Override
     public void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float delta) {
+        // set hovered
+        this.isHovered = this.isMouseOver(mouseX, mouseY);
+
+        // render button
         UIHelper.enableBlend();
         int x = getX();
         int y = getY();

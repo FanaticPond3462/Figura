@@ -1,6 +1,8 @@
 package org.figuramc.figura.mixin.gui;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.util.StringRepresentable;
 import org.figuramc.figura.utils.TextUtils;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,12 +23,10 @@ public class ClickEventActionMixin {
     // courtesy of https://github.com/SpongePowered/Mixin/issues/387
     @Shadow @Final @Mutable
     private static ClickEvent.Action[] $VALUES;
-    @Shadow @Final
-    private static Map<String, ClickEvent.Action> LOOKUP;
     @Shadow @Final private String name;
 
     static {
-        LOOKUP.put("figura_function", figura$addVariant("FIGURA_FUNCTION", "figura_function", false));
+        figura$addVariant("FIGURA_FUNCTION", "figura_function", false);
     }
 
     @Invoker("<init>")
